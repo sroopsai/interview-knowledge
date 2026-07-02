@@ -23,10 +23,10 @@ Java is a statically typed language, which means every variable must have a decl
 | Type | Size | Range | DSA Use Case |
 | :--- | :--- | :--- | :--- |
 | **int** | 4 bytes | -2.1B to 2.1B | Array indices, counters, most values |
-| **long** | 8 bytes | $-9.2 \times 10^{18}$ to $9.2 \times 10^{18}$ | Prefix sums, large products, overflow-prone math |
+| **long** | 8 bytes | -9.2 x 10^18 to 9.2 x 10^18 | Prefix sums, large products, overflow-prone math |
 | **char** | 2 bytes | 0 to 65,535 | String characters, frequency arrays |
 | **boolean** | 1 byte (JVM-dep.) | true / false | Visited arrays, flags |
-| **double** | 8 bytes | $\pm 1.7 \times 10^{308}$ | Rarely used, some geometry problems |
+| **double** | 8 bytes | ±1.7 x 10^308 | Rarely used, some geometry problems |
 
 Each primitive type has a corresponding wrapper class (`Integer`, `Long`, `Character`, `Boolean`, `Double`) that lets you use primitives in collections. We will cover this in detail in the autoboxing section.
 
@@ -44,8 +44,8 @@ This is not a theoretical concern. When `left` and `right` are both above 1 bill
 
 ### When to use `long` instead of `int`?
 Use `long` in these cases:
-* Prefix sums of arrays with large values (sum of $10^5$ elements each up to $10^9$ gives $10^{14}$).
-* Multiplication of two large ints (e.g., $n \times (n - 1)$ where $n$ is near $10^5$).
+* Prefix sums of arrays with large values (sum of 10^5 elements each up to 10^9 gives 10^14).
+* Multiplication of two large ints (e.g., n * (n - 1) where n is near 10^5).
 * Factorial or combination calculations.
 * Modulo problems where intermediate sums can exceed `int` range before taking mod.
 
@@ -77,7 +77,7 @@ Most operators in Java work as you would expect, but a few deserve special atten
 
 Modular arithmetic with `%` appears in hashing, cyclic array problems, and math-heavy questions. Remember that Java's `%` can return negative values for negative operands: `-7 % 3` gives `-1`, not `2`. To get a positive result, use `((n % m) + m) % m`.
 
-Many problems ask you to return the result "modulo $10^9 + 7$" to prevent overflow in the output. This is a standard pattern:
+Many problems ask you to return the result "modulo 10^9 + 7" to prevent overflow in the output. This is a standard pattern:
 
 ```java
 private static final int MOD = 1_000_000_007;
@@ -112,7 +112,7 @@ for (int num : nums) {
 | **OR** | `\|` | Setting bits: `n \| (1 << i)` |
 | **XOR** | `^` | Finding unique elements, toggling bits |
 | **NOT** | `~` | Bit inversion |
-| **Left shift** | `<<` | Multiply by powers of 2: `1 << n` equals $2^n$ |
+| **Left shift** | `<<` | Multiply by powers of 2: `1 << n` equals 2^n |
 | **Right shift** | `>>` | Divide by powers of 2 (preserves sign) |
 | **Unsigned right shift** | `>>>` | Divide by powers of 2 (fills with 0) |
 
@@ -468,7 +468,7 @@ This is faster and more memory-efficient than `HashMap<Character, Integer>` when
 
 ## Collections Framework
 
-The Java Collections Framework provides the data structures used in nearly every DSA problem. Choosing the right collection is often the difference between an $O(N)$ and an $O(N^2)$ solution.
+The Java Collections Framework provides the data structures used in nearly every DSA problem. Choosing the right collection is often the difference between an O(N) and an O(N^2) solution.
 
 ### Collection Hierarchy
 
@@ -536,7 +536,7 @@ Collections.frequency(list, element);     // Count occurrences
 ```
 
 ### HashMap and HashSet: O(1) Lookups
-`HashMap` appears in most DSA problems. It provides $O(1)$ average-case lookups, inserts, and deletes.
+`HashMap` appears in most DSA problems. It provides O(1) average-case lookups, inserts, and deletes.
 
 ```java
 // Frequency counting
@@ -580,7 +580,7 @@ int val = map.get("missing"); // NullPointerException!
 int val = map.getOrDefault("missing", 0); // Safe: returns 0
 ```
 
-`HashSet` provides $O(1)$ membership testing:
+`HashSet` provides O(1) membership testing:
 
 ```java
 Set<Integer> visited = new HashSet<>();
@@ -618,7 +618,7 @@ LinkedHashMap<Integer, Integer> cache = new LinkedHashMap<>(16, 0.75f, true) {
 `LinkedHashSet` similarly maintains insertion order for sets. Use these when the order in which elements were inserted matters.
 
 ### TreeMap and TreeSet: Sorted Collections
-When you need keys in sorted order, `TreeMap` and `TreeSet` provide $O(\log N)$ operations backed by a red-black tree:
+When you need keys in sorted order, `TreeMap` and `TreeSet` provide O(log N) operations backed by a red-black tree:
 
 ```java
 TreeMap<Integer, Integer> map = new TreeMap<>();
@@ -703,22 +703,22 @@ pq.size();           // Current size
 pq.isEmpty();        // Check if empty
 ```
 
-One important limitation: `PriorityQueue` does not support efficient removal of arbitrary elements. `pq.remove(element)` is $O(N)$ because it has to search the heap linearly. If you need to remove arbitrary elements from a heap, consider using a `TreeMap` instead, or use lazy deletion (mark elements as deleted and skip them when they surface via `poll()`).
+One important limitation: `PriorityQueue` does not support efficient removal of arbitrary elements. `pq.remove(element)` is O(N) because it has to search the heap linearly. If you need to remove arbitrary elements from a heap, consider using a `TreeMap` instead, or use lazy deletion (mark elements as deleted and skip them when they surface via `poll()`).
 
 ### Collections Quick Reference
 
 | Collection | Interface | Key Methods | Time Complexity | DSA Use Case |
 | :--- | :---: | :--- | :---: | :--- |
-| **ArrayList** | `List` | `add`, `get`, `set`, `size` | $O(1)$ get/add | Result lists, dynamic arrays |
-| **HashMap** | `Map` | `put`, `get`, `containsKey`, `getOrDefault` | $O(1)$ average | Frequency counting, lookups |
-| **HashSet** | `Set` | `add`, `contains`, `remove` | $O(1)$ average | Visited tracking, duplicates |
-| **LinkedHashMap** | `Map` | Same as `HashMap` + insertion order | $O(1)$ average | LRU cache, ordered maps |
-| **LinkedHashSet** | `Set` | Same as `HashSet` + insertion order | $O(1)$ average | Ordered unique elements |
-| **TreeMap** | `Map` | `put`, `floorKey`, `ceilingKey`, `firstKey` | $O(\log N)$ | Sorted access, range queries |
-| **TreeSet** | `Set` | `add`, `floor`, `ceiling`, `first` | $O(\log N)$ | Sorted unique elements |
-| **LinkedList** | `Queue` | `offer`, `poll`, `peek` | $O(1)$ | BFS queues |
-| **ArrayDeque** | `Deque` | `push`, `pop`, `offerLast`, `pollFirst` | $O(1)$ | Stacks, double-ended queues |
-| **PriorityQueue** | `Queue` | `offer`, `poll`, `peek` | $O(\log N)$ | Heaps, top-K, Dijkstra |
+| **ArrayList** | `List` | `add`, `get`, `set`, `size` | O(1) get/add | Result lists, dynamic arrays |
+| **HashMap** | `Map` | `put`, `get`, `containsKey`, `getOrDefault` | O(1) average | Frequency counting, lookups |
+| **HashSet** | `Set` | `add`, `contains`, `remove` | O(1) average | Visited tracking, duplicates |
+| **LinkedHashMap** | `Map` | Same as `HashMap` + insertion order | O(1) average | LRU cache, ordered maps |
+| **LinkedHashSet** | `Set` | Same as `HashSet` + insertion order | O(1) average | Ordered unique elements |
+| **TreeMap** | `Map` | `put`, `floorKey`, `ceilingKey`, `firstKey` | O(log N) | Sorted access, range queries |
+| **TreeSet** | `Set` | `add`, `floor`, `ceiling`, `first` | O(log N) | Sorted unique elements |
+| **LinkedList** | `Queue` | `offer`, `poll`, `peek` | O(1) | BFS queues |
+| **ArrayDeque** | `Deque` | `push`, `pop`, `offerLast`, `pollFirst` | O(1) | Stacks, double-ended queues |
+| **PriorityQueue** | `Queue` | `offer`, `poll`, `peek` | O(log N) | Heaps, top-K, Dijkstra |
 
 ---
 
@@ -919,10 +919,10 @@ int factorial(int n) {
 
 | Scenario | Typical Depth | Risk |
 | :--- | :---: | :--- |
-| **Balanced binary tree** ($n$ nodes) | $O(\log N)$ | Safe for $n$ up to $10^6$ |
-| **Linked list / skewed tree** ($n$ nodes) | $O(N)$ | Dangerous if $n > 5,000$ |
-| **Backtracking** ($k$ choices, depth $d$) | $O(d)$ | Usually safe ($d$ is small) |
-| **DFS on graph** ($n$ nodes) | $O(N)$ | Dangerous for large $n$ |
+| **Balanced binary tree** (n nodes) | O(log N) | Safe for n up to 10^6 |
+| **Linked list / skewed tree** (n nodes) | O(N) | Dangerous if n > 5,000 |
+| **Backtracking** (k choices, depth d) | O(d) | Usually safe (d is small) |
+| **DFS on graph** (n nodes) | O(N) | Dangerous for large n |
 
 The fix: Convert deep recursion to an iterative approach using an explicit stack:
 
@@ -1011,7 +1011,7 @@ pq.offer(new int[]{startNode, 0}); // [node, distance]
 
 | Approach | Pros | Cons | Use When |
 | :--- | :--- | :--- | :--- |
-| `List<List<Integer>>` | Fast index access, no hashing overhead | Wastes space if node IDs are sparse | Nodes are $0$ to $n-1$ |
+| `List<List<Integer>>` | Fast index access, no hashing overhead | Wastes space if node IDs are sparse | Nodes are 0 to n-1 |
 | `HashMap<Integer, List<Integer>>` | Handles any node IDs, no wasted space | Slightly slower due to hashing | Node IDs are large, sparse, or non-numeric |
 
 ---
@@ -1071,7 +1071,7 @@ for (int i = 0; i < nums.length; i++) {
     // Process nums[i]
 }
 ```
-This is the standard approach for problems like 3Sum and 4Sum. It runs in $O(1)$ extra space (beyond the sort) and produces results in sorted order.
+This is the standard approach for problems like 3Sum and 4Sum. It runs in O(1) extra space (beyond the sort) and produces results in sorted order.
 
 ### Approach 2: Use a Set to collect unique results
 ```java
